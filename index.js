@@ -18,10 +18,11 @@ function clean(x) {
 }
 // get the content of a text node, if any
 function nodeVal(x) { if (x) {norm(x);} return x && x.firstChild && x.firstChild.nodeValue; }
-function coordPair(x) {
+function coordPoint(x) {
     var lon = nodeVal(get1(x, 'LongitudeDegrees')),
-        lat = nodeVal(get1(x, 'LatitudeDegrees'));
-    return (lon!==null || lat!==null) ? numarray([lon,lat]) : null;
+        lat = nodeVal(get1(x, 'LatitudeDegrees')),
+        alt = nodeVal(get1(x, 'AltitudeMeters'));
+    return (lon!==null || lat!==null) ? numarray([lon,lat,alt]) : null;
 }
 
 // create a new feature collection parent object
@@ -67,7 +68,7 @@ module.exports = function(doc) {
     function getLinestring(node) {
         var j, pts = get(node, 'Trackpoint'), line = [];
         for (j = 0; j < pts.length; j++) {
-            var point = coordPair(pts[j]);
+            var point = coordPoint(pts[j]);
             if(point!==null) line.push(point);
         }
         return {
